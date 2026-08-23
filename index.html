@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#07090f">
+  <title>Digital Safety — Youth Demonstration</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app">
+    <section id="loading" class="screen active">
+      <div class="brand">DIGITAL SAFETY DEMONSTRATION</div>
+      <div class="loader-wrap">
+        <div class="loader"></div>
+        <p id="loadingText">Checking your browser…</p>
+      </div>
+      <p class="subtle">This demonstration does not request passwords, photos, contacts, camera, microphone, or precise location.</p>
+    </section>
+
+    <section id="info" class="screen">
+      <div class="eyebrow">WHAT YOUR BROWSER VOLUNTARILY EXPOSES</div>
+      <h1>Here's what this page can learn.</h1>
+      <div id="facts" class="facts"></div>
+      <button id="continueBtn" class="primary">Continue</button>
+      <p class="subtle">No password or private content was requested.</p>
+    </section>
+
+    <section id="reveal" class="screen">
+      <div class="reveal-icon">✓</div>
+      <div class="eyebrow">THE REVEAL</div>
+      <h1>You weren't hacked.</h1>
+      <p class="lead">You didn't type your password. You didn't send us a photo. You didn't give us access to your phone.</p>
+      <div class="statement">
+        <strong>You simply opened a link.</strong>
+        <span>And your browser volunteered some information to the website.</span>
+      </div>
+      <button id="socialBtn" class="primary">So why did you click?</button>
+    </section>
+
+    <section id="lesson" class="screen">
+      <div class="eyebrow">SOCIAL ENGINEERING</div>
+      <h1>The technology wasn't the trick.</h1>
+      <p class="lead">The trick was getting you to trust the message enough to click.</p>
+
+      <div class="lesson-grid">
+        <div><span>01</span><strong>Trust</strong><p>You recognise the sender.</p></div>
+        <div><span>02</span><strong>Curiosity</strong><p>You want to know what's behind the link.</p></div>
+        <div><span>03</span><strong>Urgency</strong><p>The message makes you feel you should act now.</p></div>
+      </div>
+
+      <div class="final-card">
+        <h2>A tool is not automatically dangerous.</h2>
+        <p>The danger comes from what we put into it, how we use it, and whose hands our information falls into.</p>
+      </div>
+
+      <p class="footer-note">Think before you click. Think before you post. Think before you send.</p>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
