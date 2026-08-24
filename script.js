@@ -59,7 +59,7 @@ function connection() {
 }
 
 // -----------------------------------------------------------------
-// New Helper: Fetch IP, ISP, and Location metadata via ipapi.co
+// Helper: Fetch IP, ISP, and Location metadata via ipapi.co
 // -----------------------------------------------------------------
 async function fetchIpDetails() {
   try {
@@ -89,7 +89,7 @@ async function fetchIpDetails() {
 }
 
 // -----------------------------------------------------------------
-// New Helper: Fetch Battery Level and Charging Status (where supported)
+// Helper: Fetch Battery Level and Charging Status
 // -----------------------------------------------------------------
 async function fetchBatteryDetails() {
   if (typeof navigator.getBattery === "function") {
@@ -105,13 +105,44 @@ async function fetchBatteryDetails() {
 }
 
 // -----------------------------------------------------------------
-// Updated collect() function (now async)
+// Helper: Detect Camera / Microphone Hardware Presence
+// -----------------------------------------------------------------
+async function fetchMediaHardware() {
+  if (navigator.mediaDevices && navigator.mediaDevices.enumerateDevices) {
+    try {
+      const devices = await navigator.mediaDevices.enumerateDevices();
+      const hasCam = devices.some((d) => d.kind === "videoinput");
+      const hasMic = devices.some((d) => d.kind === "audioinput");
+      return `Camera: ${hasCam ? "Detected" : "None"}, Mic: ${hasMic ? "Detected" : "None"}`;
+    } catch (_) {}
+  }
+  return "Not exposed";
+}
+
+// -----------------------------------------------------------------
+// Helper: Live Session Timer
+// -----------------------------------------------------------------
+function startTimer() {
+  const timerElem = document.getElementById("session-timer");
+  if (!timerElem) return;
+
+  let seconds = 0;
+  setInterval(() => {
+    seconds++;
+    const mins = String(Math.floor(seconds / 60)).padStart(2, "0");
+    const secs = String(seconds % 60).padStart(2, "0");
+    timerElem.textContent = `${mins}:${secs}`;
+  }, 1000);
+}
+
+// -----------------------------------------------------------------
+// Collect All Telemetry
 // -----------------------------------------------------------------
 async function collect() {
-  // Fetch async network & battery details in parallel
-  const [ipData, batteryData] = await Promise.all([
+  const [ipData, batteryData, mediaData] = await Promise.all([
     fetchIpDetails(),
     fetchBatteryDetails(),
+    fetchMediaHardware(),
   ]);
 
   return {
@@ -124,14 +155,15 @@ async function collect() {
     device: device(),
     browser: browser(),
     os: os(),
-    screen: `${screen.width} × ${screen.height} (Depth: ${screen.colorDepth}-bit)`,
+    screen: `${screen.width} × ${screen.height} (${screen.colorDepth}-bit)`,
     orientation: screen.orientation ? screen.orientation.type : "Unknown",
 
-    // Hardware details (very revealing in presentations)
+    // Hardware details
     hardware_cores: navigator.hardwareConcurrency || "Not exposed",
     device_memory_gb: navigator.deviceMemory || "Not exposed",
     max_touch_points: navigator.maxTouchPoints || 0,
     touch: navigator.maxTouchPoints > 0 || "ontouchstart" in window,
+    media_hardware: mediaData,
 
     // Network & Location details
     ip: ipData.ip,
@@ -155,6 +187,57 @@ async function collect() {
   };
 }
 
+// -----------------------------------------------------------------
+// Render UI Updates
+// -----------------------------------------------------------------
+function renderUI(data) {
+  // 1. Dynamic Banner Greeting
+  const banner = document.getElementById("greeting-banner");
+  if (banner) {
+    if (data.isp !== "Unknown") {
+      banner.textContent = `📍 Connected via ${data.isp} (${data.location_est})`;
+    } else {
+      banner.textContent = `📍 Connected from ${data.timezone}`;
+    }
+  }
+
+  // 2. Render Data Grid Card
+  const output = document.getElementById("data-output");
+  if (output) {
+    const fieldsToDisplay = [
+      { label: "IP Address", val: data.ip },
+      { label: "Network Provider", val: data.isp },
+      { label: "Estimated Location", val: data.location_est },
+      { label: "Device Type", val: `${data.device} (${data.os})` },
+      { label: "Browser", val: data.browser },
+      { label: "Screen Size", val: data.screen },
+      {
+        label: "Battery Level",
+        val: `${data.battery_level} (Charging: ${data.battery_charging})`,
+      },
+      { label: "Network Speed Class", val: data.connection },
+      {
+        label: "CPU Cores / Memory",
+        val: `${data.hardware_cores} Cores / ${data.device_memory_gb} GB RAM`,
+      },
+      { label: "Media Sensors", val: data.media_hardware },
+    ];
+
+    output.innerHTML = fieldsToDisplay
+      .map(
+        (item) => `
+        <div class="data-item">
+          <span class="data-label">${item.label}:</span>
+          <span class="data-value">${item.val}</span>
+        </div>`,
+      )
+      .join("");
+  }
+}
+
+// -----------------------------------------------------------------
+// Send to Google Apps Script Endpoint
+// -----------------------------------------------------------------
 async function send(data) {
   if (!cfg.APPS_SCRIPT_URL || cfg.APPS_SCRIPT_URL.includes("PASTE_YOUR"))
     return;
@@ -167,12 +250,16 @@ async function send(data) {
       body: JSON.stringify(data),
     });
   } catch (_) {
-    // Keep the reveal page working even if the network request fails.
+    // Keep page working silently if fetch fails
   }
 }
 
-// Execute and send on load
+// -----------------------------------------------------------------
+// Execution Flow
+// -----------------------------------------------------------------
 (async () => {
+  startTimer();
   const payload = await collect();
+  renderUI(payload);
   await send(payload);
 })();

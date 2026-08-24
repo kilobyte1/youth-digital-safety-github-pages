@@ -1,17 +1,49 @@
 <!doctype html>
 <html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Cyber Awareness</title>
-<link rel="stylesheet" href="style.css">
-</head>
-<body>
-<main>
-  <h1>You fell for the trick.</h1>
-  <p>See you at the cyber awareness meeting.</p>
-</main>
-<script src="config.js"></script>
-<script src="script.js"></script>
-</body>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Cyber Awareness Demo</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="container">
+      <!-- Dynamic Greeting Banner -->
+      <div id="greeting-banner" class="banner">
+        Connecting to device telemetry...
+      </div>
+
+      <h1>You Tapped the Link! 💡</h1>
+      <p class="subtitle">
+        Don't worry—your phone hasn't been hacked. But in under 2 seconds, your
+        browser shared this information with us:
+      </p>
+
+      <!-- Live On-Screen Timer -->
+      <div class="timer-box">
+        ⏱️ <span>Active Session Duration:</span>
+        <strong id="session-timer">00:00</strong>
+      </div>
+
+      <!-- Live Technical Data Output Grid -->
+      <div id="data-output" class="data-grid">
+        <div class="loading-spinner">Gathering browser fingerprint...</div>
+      </div>
+
+      <!-- Clarification Accordion (Prevents Panic) -->
+      <details class="reassurance-box">
+        <summary>❓ Why am I seeing this page?</summary>
+        <p>
+          This is a live demonstration for our upcoming
+          <strong>Church Youth Cyber-Awareness Session</strong>. No files,
+          passwords, photos, or personal messages were accessed. We are showing
+          you how much standard technical metadata is automatically sent
+          whenever you open <em>any</em> link on the internet!
+        </p>
+      </details>
+    </main>
+
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+  </body>
 </html>
