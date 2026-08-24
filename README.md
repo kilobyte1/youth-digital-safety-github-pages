@@ -1,50 +1,38 @@
-# Youth Digital Safety Demonstration
+# Minimal Cyber Awareness Page
 
-A safe, client-side GitHub Pages demonstration for a church youth session.
+The participant page immediately displays:
 
-## What it demonstrates
+"You fell for the trick.
 
-The page shows information that a normal browser can expose to a webpage:
+See you at the cyber awareness meeting."
 
-- Device category
-- Browser
-- Operating system
-- Screen dimensions
-- Time zone
-- Language
-- Touch capability
-- Connection information where the browser exposes it
+It simultaneously sends only the following non-sensitive browser/device demonstration data to Google Sheets:
 
-## Privacy
+- timestamp
+- random demonstration ID
+- device category
+- browser
+- operating system
+- screen dimensions
+- browser time zone
+- browser language
+- touch capability
+- connection type when exposed by the browser
 
-This project intentionally does **not** collect or transmit:
+It does not collect IP addresses, precise GPS, passwords, cookies, authentication tokens, camera/microphone data, contacts, files, or browsing history.
 
-- Passwords
-- OTPs
-- Cookies
-- Authentication tokens
-- Camera or microphone data
-- Contacts
-- Photos/files
-- Precise GPS location
-- IP addresses to a server controlled by this project
+## Google Sheets setup
 
-The information is calculated locally in the visitor's browser.
+1. Create a Google Sheet.
+2. Extensions -> Apps Script.
+3. Replace the Apps Script editor contents with `Code.gs`.
+4. Save.
+5. Deploy -> New deployment.
+6. Select `Web app`.
+7. Execute as: `Me`.
+8. Who has access: `Anyone`.
+9. Deploy and copy the `/exec` URL.
+10. Put that URL into `config.js`.
+11. Upload the project to GitHub Pages.
 
-## GitHub Pages
-
-1. Create a new GitHub repository.
-2. Upload `index.html`, `style.css`, and `script.js`.
-3. Open **Settings → Pages**.
-4. Select **Deploy from a branch**.
-5. Choose the `main` branch and `/ (root)`.
-6. Save.
-7. GitHub will provide your Pages URL.
-
-Example:
-
-`https://YOUR-USERNAME.github.io/YOUR-REPOSITORY/`
-
-## Important
-
-Tell the church leadership exactly what the demonstration does. Because the audience includes minors, keep the exercise non-invasive and avoid collecting identifying information.
+Keep the Google Sheet private and use only the approved, limited demonstration data.
