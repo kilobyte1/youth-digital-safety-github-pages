@@ -146,6 +146,7 @@ async function collect() {
   ]);
 
   return {
+    secret: cfg.SECRET_KEY || "",
     demo_id: cfg.DEMO_ID || "demo",
     visitor_id: crypto.randomUUID
       ? crypto.randomUUID()
